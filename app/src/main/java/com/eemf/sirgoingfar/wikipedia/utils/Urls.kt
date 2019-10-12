@@ -1,7 +1,8 @@
 package com.eemf.sirgoingfar.wikipedia.utils
 
 object Urls {
-    private val baseUrl = "https://en.wikipedia.org/w/api.php"
+
+    val baseUrl = "https://en.wikipedia.org/w/api.php"
 
     fun getSearchUrl(term: String, skip: Int, take: Int): String {
         return baseUrl + "?action=query" +

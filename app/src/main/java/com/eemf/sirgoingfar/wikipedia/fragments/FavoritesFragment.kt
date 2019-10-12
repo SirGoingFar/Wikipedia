@@ -2,22 +2,24 @@ package com.eemf.sirgoingfar.wikipedia.fragments
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.eemf.sirgoingfar.wikipedia.R
+import com.eemf.sirgoingfar.wikipedia.activities.ArticleDetailActivity
 import com.eemf.sirgoingfar.wikipedia.activities.MainActivity
 import com.eemf.sirgoingfar.wikipedia.adapters.ArticleRecyclerViewAdapter
-import com.eemf.sirgoingfar.wikipedia.adapters.HistoryArticleRecyclerViewAdapter
-import com.eemf.sirgoingfar.wikipedia.models.Article
+import com.eemf.sirgoingfar.wikipedia.models.WikiResult
 import kotlinx.android.synthetic.main.fragment_favorites.*
+import org.jetbrains.anko.doAsync
 
-class FavoritesFragment : Fragment(), ArticleRecyclerViewAdapter.OnArticleClickListener {
+class FavoritesFragment : BaseFragment(), ArticleRecyclerViewAdapter.OnArticleClickListener {
 
     private lateinit var mainActivity: MainActivity
+    private val adapter = ArticleRecyclerViewAdapter(mainActivity, ArrayList(), this@FavoritesFragment)
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -38,11 +40,24 @@ class FavoritesFragment : Fragment(), ArticleRecyclerViewAdapter.OnArticleClickL
 
         rv_favorites_list.setHasFixedSize(true)
         rv_favorites_list.layoutManager = LinearLayoutManager(mainActivity, LinearLayoutManager.VERTICAL, false)
-        rv_favorites_list.adapter =
-            ArticleRecyclerViewAdapter(mainActivity, ArrayList(), this@FavoritesFragment)
+        rv_favorites_list.adapter = adapter
     }
 
-    override fun onArticleClick(position: Int, article: Article) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onResume() {
+        super.onResume()
+
+        doAsync {
+            val favPages = wikiManager?.getFavorite()
+            activity?.runOnUiThread {
+                favPages?.let { adapter.swapData(it) }
+            }
+        }
     }
+
+    override fun onArticleClick(position: Int, article: WikiResult.WikiPage) {
+        val intent = Intent(context, ArticleDetailActivity::class.java)
+        intent.putExtra(ArticleDetailActivity.KEY_WIKI_PAGE, article)
+        startActivity(intent)
+    }
+
 }

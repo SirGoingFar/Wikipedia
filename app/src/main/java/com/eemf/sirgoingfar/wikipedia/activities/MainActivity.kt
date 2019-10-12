@@ -9,7 +9,7 @@ import com.eemf.sirgoingfar.wikipedia.fragments.FavoritesFragment
 import com.eemf.sirgoingfar.wikipedia.fragments.HistoryFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val mExploreFragment: ExploreFragment = ExploreFragment()
     private val mFavoriteFragment: FavoritesFragment = FavoritesFragment()

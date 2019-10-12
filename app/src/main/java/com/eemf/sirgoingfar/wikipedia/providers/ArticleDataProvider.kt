@@ -9,29 +9,31 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.gson.GsonDeserializer
 import com.github.kittinunf.fuel.httpGet
+import retrofit2.Retrofit
 import java.io.Reader
 
 class ArticleDataProvider {
 
     init {
+        val builder: Retrofit.Builder = Retrofit.Builder().baseUrl(Urls.baseUrl)
         FuelManager.instance.baseHeaders = mapOf("User-Agent" to BuildConfig.APPLICATION_ID)
     }
 
-    fun search(term: String, skip: Int, take: Int, responseHandler: (result: WikiResult) -> Unit?) {
+    fun searchQuery(term: String, skip: Int, take: Int, responseHandler: (result: WikiResult) -> Unit?) {
 
         Urls.getSearchUrl(term, skip, take).httpGet().responseObject(WikiDeserializer()) { _, response, result ->
 
             if (response.httpStatusCode != 200)
                 throw NetworkErrorException("Unable to fetch data")
 
-            val (data, _) = result
+            val (data, _) = result.also {  }
 
             responseHandler.invoke(data as @ParameterName(name = "result") WikiResult)
         }
 
     }
 
-    fun random(take: Int, responseHandler: (result: WikiResult) -> Unit?) {
+    fun getRandom(take: Int, responseHandler: (result: WikiResult) -> Unit?) {
 
         Urls.getRandomUrl(take).httpGet().responseObject(WikiDeserializer()) { _, response, result ->
 

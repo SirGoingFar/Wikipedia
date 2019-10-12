@@ -15,4 +15,9 @@
     <string name="title_explore">Explore</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_history">History</string>
+    <string name="text_favorite">Favorite</string>
+    <string name="text_clear">Clear</string>
+    <string name="text_history_cleared">History cleared</string>
+    <string name="prompt_text_delete_history">Are you sure you want to clear the History?</string>
+    <string name="text_confirm">Confirm</string>
 </resources>
